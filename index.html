@@ -1,0 +1,643 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Khmer:wght@400;600;700&display=swap"
+        rel="stylesheet">
+    <title>សារជូនពរពិសេស ❤️🧧</title>
+
+    <style>
+        :root {
+            --w: min(92vw, 380px);
+            --h: 520px;
+            --pink: #ff3b7a;
+            --pink2: #ff7fb0;
+            --red: #b30000;
+            --gold: #d4a017;
+            --ink: #2a1020;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        /* ✅ Scrollable page on mobile */
+        body {
+            font-family: 'Noto Sans Khmer', system-ui, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            /* font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; */
+            color: var(--ink);
+            display: flex;
+            justify-content: center;
+            background:
+                radial-gradient(900px 600px at 20% 10%, #ffd6ea 0%, transparent 60%),
+                radial-gradient(900px 600px at 80% 0%, #ffe7f2 0%, transparent 55%),
+                radial-gradient(900px 600px at 50% 90%, #fff0f7 0%, transparent 55%),
+                linear-gradient(135deg, #fff 0%, #fff6fb 50%, #fff 100%);
+            overflow-x: hidden;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* background particles layer */
+        #bgParticles {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+            /* behind cards */
+        }
+
+        .stage {
+            width: min(1100px, 96vw);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 14px;
+            padding: 18px 0 28px;
+            /* ✅ breathing room top/bottom */
+            position: relative;
+            z-index: 5;
+            /* above particles */
+            transform: translateY(10px);
+            opacity: 0;
+            animation: appear .9s ease-out forwards;
+        }
+
+        @keyframes appear {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* ✅ Buttons aligned: put them in same row, wrap nicely */
+        .topbar {
+            width: 100%;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 0 8px;
+        }
+
+        .titleBlock {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: clamp(20px, 3.3vw, 30px);
+            letter-spacing: .2px;
+        }
+
+        .hint {
+            margin: 0;
+            opacity: .7;
+            font-size: 13px;
+            line-height: 1.25;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .pill {
+            border: 1px solid rgba(42, 16, 32, .12);
+            background: rgba(255, 255, 255, .72);
+            backdrop-filter: blur(10px);
+            border-radius: 999px;
+            padding: 10px 12px;
+            box-shadow: 0 14px 30px rgba(0, 0, 0, .10);
+            cursor: pointer;
+            user-select: none;
+            font-weight: 700;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+
+        .pill:active {
+            transform: translateY(1px);
+        }
+
+        .grid {
+            width: 100%;
+            display: flex;
+            gap: 26px;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: stretch;
+            padding: 0 10px 10px;
+        }
+
+        /* Flip Card */
+        .flip {
+            width: var(--w);
+            height: var(--h);
+            perspective: 1200px;
+            opacity: 0;
+            transform: translateY(18px) scale(.98);
+            animation: cardIn .9s ease-out forwards;
+        }
+
+        .flip:nth-child(2) {
+            animation-delay: .12s;
+        }
+
+        @keyframes cardIn {
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .flip-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform .8s cubic-bezier(.2, .8, .2, 1);
+        }
+
+        .flip.is-flipped .flip-inner {
+            transform: rotateY(180deg);
+        }
+
+        .face {
+            position: absolute;
+            inset: 0;
+            border-radius: 26px;
+            overflow: hidden;
+            backface-visibility: hidden;
+            box-shadow: 0 24px 70px rgba(0, 0, 0, .16);
+            border: 1px solid rgba(0, 0, 0, .06);
+            background: rgba(255, 255, 255, .85);
+            backdrop-filter: blur(10px);
+        }
+
+        .back {
+            transform: rotateY(180deg);
+        }
+
+        .frame {
+            position: absolute;
+            inset: 14px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, .35);
+            box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .06);
+            overflow: hidden;
+        }
+
+        .img {
+            width: 100%;
+            height: 62%;
+            object-fit: cover;
+            display: block;
+            border-radius: 18px;
+            border: 1px solid rgba(0, 0, 0, .06);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, .15);
+        }
+
+        .content {
+            padding: 12px 6px 0;
+            text-align: center;
+        }
+
+        .cardTitle {
+            margin: 10px 0 6px;
+            font-size: 22px;
+            line-height: 1.15;
+        }
+
+        .text {
+            margin: 0;
+            font-size: 14.5px;
+            line-height: 1.45;
+            opacity: .85;
+            padding: 0 6px;
+        }
+
+        .tap {
+            margin: 10px 0 0;
+            font-size: 12.5px;
+            opacity: .65;
+        }
+
+        /* Themed borders */
+        .valentine .face {
+            border: 1px solid rgba(255, 59, 122, .18);
+        }
+
+        .valentine .frame {
+            box-shadow:
+                inset 0 0 0 1px rgba(255, 59, 122, .14),
+                inset 0 0 0 10px rgba(255, 59, 122, .06);
+        }
+
+        .cny .face {
+            border: 1px solid rgba(212, 160, 23, .22);
+        }
+
+        .cny .frame {
+            box-shadow:
+                inset 0 0 0 1px rgba(212, 160, 23, .18),
+                inset 0 0 0 10px rgba(212, 160, 23, .07);
+        }
+
+        /* Back face styling */
+        .backwrap {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px;
+        }
+
+        .big {
+            font-size: 24px;
+            margin: 0;
+            line-height: 1.12;
+        }
+
+        .note {
+            margin: 10px 0 0;
+            font-size: 14.5px;
+            line-height: 1.5;
+            opacity: .9;
+        }
+
+        .sig {
+            margin-top: 10px;
+            font-weight: 800;
+            opacity: .8;
+        }
+
+        .badge {
+            align-self: center;
+            margin-top: 10px;
+            display: inline-flex;
+            gap: 8px;
+            align-items: center;
+            padding: 10px 12px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .65);
+            border: 1px solid rgba(0, 0, 0, .08);
+            box-shadow: 0 12px 26px rgba(0, 0, 0, .10);
+            font-weight: 800;
+            font-size: 13.5px;
+            text-align: center;
+        }
+
+        /* Decorative gradients on backs */
+        .valentine .back {
+            background:
+                radial-gradient(500px 320px at 20% 20%, rgba(255, 59, 122, .20), transparent 55%),
+                radial-gradient(500px 320px at 80% 10%, rgba(255, 127, 176, .18), transparent 55%),
+                linear-gradient(135deg, rgba(255, 255, 255, .92), rgba(255, 240, 247, .90));
+        }
+
+        .cny .back {
+            background:
+                radial-gradient(500px 320px at 20% 20%, rgba(212, 160, 23, .18), transparent 55%),
+                radial-gradient(500px 320px at 80% 10%, rgba(179, 0, 0, .18), transparent 55%),
+                linear-gradient(135deg, rgba(255, 255, 255, .92), rgba(255, 248, 230, .90));
+        }
+
+        /* ✅ Mobile: stack top bar nicely */
+        @media (max-width: 520px) {
+            .topbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .controls {
+                justify-content: flex-start;
+            }
+        }
+
+        /* ---------- Background particle shapes ---------- */
+        .p {
+            position: absolute;
+            left: var(--x);
+            top: 110%;
+            transform: translate(-50%, -50%) rotate(var(--r));
+            animation: floatUp var(--dur) linear infinite;
+            opacity: .9;
+            filter: drop-shadow(0 10px 14px rgba(0, 0, 0, .12));
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translate(calc(-50% + var(--dx1)), 0) rotate(var(--r));
+                opacity: 0;
+            }
+
+            10% {
+                opacity: .9;
+            }
+
+            50% {
+                transform: translate(calc(-50% + var(--dx2)), -70vh) rotate(calc(var(--r) + 45deg));
+                opacity: .9;
+            }
+
+            100% {
+                transform: translate(calc(-50% + var(--dx3)), -135vh) rotate(calc(var(--r) + 90deg));
+                opacity: 0;
+            }
+        }
+
+
+        .heart {
+            width: var(--s);
+            height: var(--s);
+            position: relative;
+            transform: translate(-50%, -50%) rotate(45deg);
+        }
+
+        .heart::before,
+        .heart::after {
+            content: "";
+            position: absolute;
+            width: var(--s);
+            height: var(--s);
+            background: linear-gradient(135deg, var(--pink), var(--pink2));
+            border-radius: 50%;
+            top: 0;
+            left: 0;
+        }
+
+        .heart::after {
+            left: calc(var(--s) * -0.5);
+        }
+
+        .heart::before {
+            top: calc(var(--s) * -0.5);
+        }
+
+        .lantern {
+            width: calc(var(--s) * 0.85);
+            height: var(--s);
+            border-radius: 14px;
+            background: linear-gradient(180deg, #ff4d4d, #b30000);
+            border: 1px solid rgba(255, 255, 255, .25);
+            position: relative;
+            box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .12);
+        }
+
+        .lantern::before {
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: -10px;
+            transform: translateX(-50%);
+            width: 30%;
+            height: 10px;
+            border-radius: 6px 6px 2px 2px;
+            background: linear-gradient(180deg, #ffd56a, #d4a017);
+            border: 1px solid rgba(0, 0, 0, .08);
+        }
+
+        .lantern::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            bottom: -14px;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 14px;
+            background: rgba(212, 160, 23, .9);
+            box-shadow: 0 0 10px rgba(212, 160, 23, .35);
+        }
+
+        .coin {
+            width: var(--s);
+            height: var(--s);
+            border-radius: 999px;
+            background: radial-gradient(circle at 30% 30%, #fff2b3, #d4a017 60%, #b8860b);
+            border: 1px solid rgba(0, 0, 0, .10);
+            position: relative;
+            box-shadow: inset 0 0 0 3px rgba(255, 255, 255, .18);
+        }
+
+        .coin::after {
+            content: "";
+            position: absolute;
+            inset: 28%;
+            border-radius: 999px;
+            border: 2px solid rgba(179, 0, 0, .55);
+            box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .16);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ✅ Combined background particles (hearts + lanterns + coins) -->
+    <div id="bgParticles" aria-hidden="true"></div>
+
+    <div class="stage">
+        <div class="topbar">
+            <div class="titleBlock">
+                <h1>សារជូនពរពិសេស ❤️🧧</h1>
+                <p class="hint">ចុចដើម្បីបើកកាត • ចុច "លេងតន្ត្រី" ដើម្បីស្តាប់ 🎶</p>
+            </div>
+
+            <div class="controls">
+                <button class="pill" id="musicBtn">លេងតន្ត្រី 🎶</button>
+                <button class="pill" id="flipAllBtn">បង្ហាញព្រមគ្នា 🔄</button>
+            </div>
+        </div>
+
+        <div class="grid">
+
+            <!-- 💘 VALENTINE -->
+            <section class="flip valentine" id="valCard" aria-label="Valentine card">
+                <div class="flip-inner">
+                    <div class="face front">
+                        <div class="frame">
+                            <img class="img" src="/images/valentine.png" alt="Valentine photo">
+                            <div class="content">
+                                <h2 class="cardTitle">រីករាយថ្ងៃបុណ្យនៃក្ដីស្រឡាញ់ 💖</h2>
+                                <p class="text">
+                                    វត្តមានរបស់អ្នកទាំងអស់គ្នា ធ្វើឲ្យជីវិតខ្ញុំ<br />ផ្អែមល្ហែម និងមានន័យ។<br />
+                                    សូមជូនពរគ្រួសារប៉ាឌីម៉ាក់ប៉ាចឲ្យមានក្ដីស្រឡាញ់ច្រើនៗ<br /> កក់ក្តៅចិត្ត
+                                    និងសុភមង្គលជានិច្ច។
+                                </p>
+                                <p class="tap">ចុចដើម្បីបើកកាត 💘</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="face back">
+                        <div class="backwrap">
+                            <div>
+                                <p class="big">ជូនចំពោះគ្រួសារប៉ាឌីម៉ាក់ប៉ាច 💞</p>
+                                <p class="note">
+                                    បើខ្ញុំអាចផ្តល់អ្វីមួយឲ្យអ្នកបាន<br />
+                                    ខ្ញុំនឹងផ្តល់ឲ្យអ្នកឃើញខ្លួនអ្នកតាមកែវភ្នែកខ្ញុំ<br />
+                                    ព្រោះអ្នកនឹងដឹងថា អ្នកពិសេសប៉ុណ្ណាសម្រាប់ខ្ញុំ។
+                                </p>
+                                <div class="badge">💘 ក្តីស្រលាញ់ • 🌹 នឹករលឹក • ✨ ជាដរាប</div>
+                            </div>
+                            <div class="sig">— ដោយក្តីស្រលាញ់ និងនឹករលឹកពីចម្ងាយ ❤️</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 🧧 CNY -->
+            <section class="flip cny" id="cnyCard" aria-label="Chinese New Year card">
+                <div class="flip-inner">
+                    <div class="face front">
+                        <div class="frame">
+                            <img class="img" src="/images/family.png" alt="Family photo">
+                            <div class="content">
+                                <h2 class="cardTitle" style="color:var(--red);">សួស្តីឆ្នាំថ្មី 🧧</h2>
+                                <p class="text">
+                                    សូមជូនពរក្រុមគ្រួសារប៉ាឌីម៉ាក់ប៉ាច
+                                    ឲ្យមានសុខភាពល្អ<br /> សុភមង្គល និងសំណាងល្អពេញមួយឆ្នាំ។<br />
+                                    新年快乐 🧧 恭喜发财
+                                </p>
+                                <p class="tap">ចុចដើម្បីបើកកាត 🧧</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="face back">
+                        <div class="backwrap">
+                            <div>
+                                <p class="big" style="color:var(--red);">ជួនចំពោះគ្រួសារប៉ាឌីម៉ាក់ប៉ាច 🧧</p>
+                                <p class="note">
+                                    សូមអោយផ្ទះរបស់យើង ពោរពេញដោយសេចក្តីសប្បាយរីករាយ សំណាងល្អ​ និងសេចក្តីសុខជានិច្ច។<br />
+                                    អរគុណសម្រាប់ក្ដីស្រឡាញ់ និងការគាំទ្ររបស់អ្នកទាំងអស់គ្នា ជាពិសេសប៉ាម៉ាក់។
+                                </p>
+                                <div class="badge">🧧 សំណាងល្អ • ✨ សុខសាន្ត • 💛 រួបរួមគ្រួសារ<br />🧧 好运 • ✨ 平安 • 💛 团圆
+                                </div>
+                            </div>
+                            <div class="sig">— ដោយក្តីស្រលាញ់ និងនឹករលឹកពីចម្ងាយ 💛</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- background music -->
+    <audio id="bgm" loop preload="auto">
+        <source src="music.m4a" type="audio/mp4">
+    </audio>
+
+    <script>
+        // Stop clicks on buttons from flipping cards (better in Messenger/IG browsers)
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', (e) => e.stopPropagation());
+        });
+        // ---------- Music ----------
+        const bgm = document.getElementById('bgm');
+        const musicBtn = document.getElementById('musicBtn');
+        let musicOn = false;
+
+        async function toggleMusic() {
+            try {
+                if (!musicOn) {
+                    await bgm.play();
+                    musicOn = true;
+                    musicBtn.textContent = 'កំពុងលេង 🔊';
+                } else {
+                    bgm.pause();
+                    musicOn = false;
+                    musicBtn.textContent = 'លេងតន្ត្រី 🎶';
+                }
+            } catch (e) {
+                musicBtn.textContent = 'ចុចម្តងទៀត 🎶';
+            }
+        }
+        musicBtn.addEventListener('click', toggleMusic);
+
+        function startMusicIfPossible() {
+            if (!musicOn) {
+                bgm.play().then(() => {
+                    musicOn = true;
+                    musicBtn.textContent = 'កំពុងលេង 🔊';
+                }).catch(() => { });
+            }
+        }
+
+        // ---------- Flip behavior ----------
+        const valCard = document.getElementById('valCard');
+        const cnyCard = document.getElementById('cnyCard');
+        const flipAllBtn = document.getElementById('flipAllBtn');
+
+        function flip(card) {
+            card.classList.toggle('is-flipped');
+            startMusicIfPossible();
+        }
+        valCard.addEventListener('click', () => flip(valCard));
+        cnyCard.addEventListener('click', () => flip(cnyCard));
+        flipAllBtn.addEventListener('click', () => {
+            valCard.classList.toggle('is-flipped');
+            cnyCard.classList.toggle('is-flipped');
+            startMusicIfPossible();
+        });
+
+        // ---------- Background Particles (optimized) ----------
+        const layer = document.getElementById('bgParticles');
+        const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        function rand(min, max) { return Math.random() * (max - min) + min; }
+
+        function makeParticle(kind, sizePx) {
+            const p = document.createElement('div');
+            p.className = 'p';
+            p.style.setProperty('--s', `${sizePx}px`);
+            p.style.setProperty('--x', `${rand(4, 96)}%`);
+            p.style.setProperty('--r', `${rand(-40, 40)}deg`);
+            p.style.setProperty('--dur', `${rand(8.5, 15.5)}s`);
+            p.style.setProperty('--dx1', `${rand(-14, 14)}px`);
+            p.style.setProperty('--dx2', `${rand(-46, 46)}px`);
+            p.style.setProperty('--dx3', `${rand(-18, 18)}px`);
+
+            const inner = document.createElement('div');
+            inner.className = kind;
+            p.appendChild(inner);
+
+            layer.appendChild(p);
+            setTimeout(() => p.remove(), 16000);
+        }
+
+        let running = true;
+        document.addEventListener('visibilitychange', () => {
+            running = !document.hidden;
+        });
+
+        // One scheduler loop instead of 3 intervals
+        let lastHeart = 0, lastLantern = 0, lastCoin = 0;
+
+        function particleLoop(t) {
+            if (!reduceMotion && running) {
+                // lower rates = smoother on in-app browsers
+                if (t - lastHeart > 520) { makeParticle('heart', rand(14, 22)); lastHeart = t; }
+                if (t - lastLantern > 980) { makeParticle('lantern', rand(18, 28)); lastLantern = t; }
+                if (t - lastCoin > 760) { makeParticle('coin', rand(14, 22)); lastCoin = t; }
+            }
+            requestAnimationFrame(particleLoop);
+        }
+        requestAnimationFrame(particleLoop);
+
+    </script>
+
+</body>
+
+</html>
